@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/XTDA/add/css/bootstrap-datepicker.min.css">
+    <script src="/static/XTDA/add/js/bootstrap-datepicker.min.js"></script>
+    <script src="/static/XTDA/add/js/bootstrap-datepicker.zh-CN.min.js"></script>
+    <style type="text/css">
+        .form-control{
+            width: 300px;
+        }
+        .col-md-3,.col-md-4{
+            opacity: 0.9;
+        }
+        h3{
+          background-color: #124a94;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel panel-heading">
+        <h1 class="text-center">{{ title }}</h1>
+        {% if err_msg %}
+            <h2 class="text-center text-warning">{{ err_msg }}</h2>
+        {% endif %}
+        <a href="{% url 'xtda_index' %}"><button type="button" class="btn btn-info btn-sm" style="position:absolute; left: 10px; top: 10px;"><i class="glyphicon glyphicon-backward"></i></button></a>
+    </div>
+    <form method="post" action="{% url "xtda_add" %}">
+        {% csrf_token %}
+    {% if data.BH %}
+        <input type="text" value="{{ data.BH }}" name="BH" hidden>
+    {% endif %}
+    <div class="col-md-12">
+            <h3 class="text-center">系统</h3><hr>
+            <div class="col-md-4">
+                <label for="LX" class="control-label"><span style="color:red">*</span>系统类型</label>
+                <select class="form-control" id="LX" name="LX" required>
+                    {% for var in XTLX %}
+                        <option value="{{ var.DM }}" {% if data.LX == var.DM %}selected{% endif %} {% if LX == var.DM %}selected{% endif %}>{{ var.MC }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="ZWM" class="control-label"><span style="color:red">*</span>系统名称</label>
+                <input type="text" class="form-control" id="ZWM" name="ZWM" value="{{ data.ZWM }}{{ ZWM }}" required/>
+            </div>
+            <div class="col-md-4">
+                <label for="JC" class="control-label">系统简称</label>
+                <input type="text" class="form-control" id="JC" name="JC" value="{{ data.JC }}{{ JC }}"/>
+            </div>
+        </div>
+
+    <div class="col-md-12">
+    <h3 class="text-center">管理</h3><hr>
+    <div class="col-md-4">
+        <label for="GLYZGH" class="control-label"><span style="color:red">*</span>管理员职工号</label>
+        <input type="text" class="form-control" id="GLYZGH" name="GLYZGH" value="{{ data.GLYZGH }}{{ GLYZGH }}" onkeyup="auto()" required/>
+    </div>
+    <div class="col-md-4">
+        <label for="GLYXM" class="control-label"><span style="color:red">*</span>管理员姓名</label>
+        <input type="text" class="form-control" id="GLYXM" name="GLYXM" value="{{ data.GLYXM }}{{ GLYXM }}" required readonly/>
+    </div>
+    <div class="col-md-4">
+        <label for="GLDWDM" class="control-label"><span style="color:red">*</span>管理单位</label>
+        <input class="form-control" id="GLYDWDM" value="{{ data.GLDWMC }}" required readonly disabled>
+        <input hidden type="text" id="GLYDWDM_hidden" name="GLDWDM" value="{{ data.GLDWDM }}" required>
+{#            <option></option>#}
+{#             {% for var in GLDWDMs %}#}
+{#                <option value="{{ var.DWDM }}" {% if var.DWDM == data.GLDWDM %} selected {% endif %}{% if GLDWDM == var.DWDM %}selected{% endif %} text="{{ var.MC }}">{{ var.MC }}</option>#}
+{#             {% endfor %}#}
+{#        </input>#}
+    </div>
+    </div>
+
+    <div class="col-md-12">
+    <h3 class="text-center">服务器</h3><hr>
+    <div class="col-md-4">
+        <label for="YYFWQIP" class="control-label">应用服务器IP</label>
+        <input type="text" class="form-control" id="YYFWQIP" name="YYFWQIP" value="{{ data.YYFWQIP }}{{ YYFWQIP }}"/>
+    </div>
+    <div class="col-md-4">
+        <label for="YYFWQLXDM" class="control-label">应用服务器类型</label>
+        <select class="form-control" id="YYFWQLXDM" name="YYFWQLXDM">
+            <option value="" selected>无</option>
+            {% for var in FWQLX %}
+                <option value="{{ var.DM }}" {% if data.YYFWQLXDM == var.DM %}selected{% endif %}{% if YYFWQLXDM == var.DM %}selected{% endif %}>{{ var.MC }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="SJKFWQIP" class="control-label">数据库服务器IP</label>
+        <input type="text" class="form-control" id="SJKFWQIP" name="SJKFWQIP" value="{{ data.SJKFWQIP }}{{ SJKFWQIP }}"/>
+    </div>
+    <div class="col-md-4">
+        <label for="SJKFWQLXDM" class="control-label">数据库服务器类型</label>
+        <select class="form-control" id="SJKFWQLXDM" name="SJKFWQLXDM">
+            <option value="" selected>无</option>
+            {% for var in FWQLX %}
+                <option value="{{ var.DM }}" {% if data.SJKFWQLXDM == var.DM %}selected{% endif %}{% if SJKFWQLXDM == var.DM %}selected{% endif %}>{{ var.MC }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+    <label for="SJKFWQLXDM" class="control-label">数据库类型</label>
+    <select class="form-control" id="SJKLXDM" name="SJKLXDM">
+        <option value="" selected>无</option>
+        {% for var in SJKLX %}
+            <option value="{{ var.DM }}" {% if data.SJKLXDM == var.DM %}selected{% endif %}{% if SJKLXDM == var.DM %}selected{% endif %}>{{ var.MC }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    </div>
+    <div class="col-md-12">
+            <h3 class="text-center">其他</h3><hr>
+            <div class="col-md-3">
+                <label for="SJKBB" class="control-label">数据库版本</label>
+                 <input type="text" class="form-control" id="SJKBB" name="SJKBB" value="{{ data.SJKBB }}{{ SJKBB }}"/>
+            </div>
+{#            <div class="col-md-3">#}
+{#                <label for="SJLY" class="control-label">数据来源</label>#}
+{#                <input type="text" class="form-control" id="SJLY" name="SJLY"value="{{ data.SJLY }}{{ SJLY }}"/>#}
+{#            </div>#}
+            <div class="col-md-3">
+                <label for="JDRQ" class="control-label"><span style="color:red">*</span>建档日期</label>
+                 <input type='text' class="form-control datepicker" id="JDRQ" name="JDRQ" value="{{ data.JDRQ }}{{ JDRQ }}" required/>
+            </div>
+            <div class="col-md-3">
+                <label for="SCCJ" class="control-label">生产厂家</label>
+                <input type="text" class="form-control" id="SCCJ" name="SCCJ" value="{{ data.SCCJ }}{{ SCCJ }}"/>
+            </div>
+    </div>
+    <div class="col-md-12 text-center">
+        <hr/>
+        <button type="submit" class="btn btn-primary" style="width: 30%;" onclick="return check_dw_xm()">提交</button>
+    </div>
+    </form>
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('.datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            todayBtn: "linked",
+            language: "zh-CN",
+            todayHighlight: true
+        });
+    });
+    function check_dw_xm(){
+        let dw = $("#GLYDWDM").val()
+        let xm = $("#GLYXM").val()
+        $("#GLYXM").attr("style", "")
+        $("#GLYDWDM").attr("style", "")
+        if(xm == ""){
+            $("#GLYXM").attr("style", "border:1px solid red")
+            return false
+        }
+        if(dw == ""){
+            $("#GLYDWDM").attr("style", "border:1px solid red")
+            return false
+        }
+        return true
+    }
+    function auto(){
+        let ZGH = $("#GLYZGH").val();
+        if (ZGH.length >= 6)
+            $.ajax({
+                url: "/autocomplete",
+                contentType: "application/x-www-form-urlencoded",
+                async: true,
+                type: "post",
+                dataType: 'json',
+                data: {"ZGH": ZGH, "csrfmiddlewaretoken": "{{ csrf_token }}"},
+                success: function (res){
+                    if (res.RTN_CODE === "00") {
+                        let XM = res.DATA[0].XM
+                        let DWMC = res.DATA[0].DWMC
+                        let DWDM = res.DATA[0].DWDM
+                        $("#GLYXM").val(XM)
+                        {#$("#GLYDWDM").find("option[text="+ DWMC +"]").attr("selected",true);#}
+                        $("#GLYDWDM").val(DWMC)
+                        $("#GLYDWDM_hidden").val(DWDM)
+                    }
+                    else {
+                        $("#GLYXM").val("")
+                        $("#GLYDWDM").val("")
+                        $("#GLYDWDM_hidden").val("")
+                    }
+                },
+                error: function (){
+                    console.log("网络错误")
+                }
+            })
+    }
+    {% if not BH %}
+        $(document).ready(function (){
+            var d = new Date()
+            var vYear = d.getFullYear()
+            var vMon = d.getMonth() + 1
+            var vDay = d.getDate()
+            var h = d.getHours();
+            var m = d.getMinutes();
+            var se = d.getSeconds();
+            var s=vYear + '-' + (vMon<10 ? "0" + vMon : vMon)+ '-' + (vDay<10 ? "0"+ vDay : vDay);
+            $("#JDRQ").val(s);
+        })
+    {% endif %}
+</script>
+</html>

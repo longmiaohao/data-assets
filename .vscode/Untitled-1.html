@@ -1,0 +1,196 @@
+<html lang="ch">
+<head>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/bootstrap-select.min.css">
+    <script src="/static/PROCESS/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/style.css">
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        th,td{
+            text-align: center;
+        }
+        .glyphicon-chevron-right,.glyphicon-chevron-left{
+            font-size: 50px;
+        }
+        .glyphicon-user{
+            font-size: 12px;
+        }
+        h3{
+            padding-top: 0px;
+        }
+        .carousel-inner{
+            overflow: auto;
+        }
+        .carousel-control{
+            width: 5%;
+        }
+        .progress_inner{
+            top:0px
+        
+        }
+        .header{
+            height: 44px;
+            width: 100%;
+            background-color: #3A7E59;
+            padding-left: 20px;
+        }
+        .logo{
+            height: 40px;
+            float: left;
+        }
+        .bh-headerBar-title{
+            color: #fff;
+            float: left;
+            font-size: 24px;
+            line-height: 44px;
+            margin-left: 8px;
+            margin-top: -1.5px;
+        }
+        .load{
+            float: right;
+            color: #fff;
+        }
+        .footer{
+        background-color: #3A7E59;
+        height: 32px;
+        text-align: center;
+        width: 100%;
+        padding: 6px 0;
+        margin-top: 43px;
+        }
+        .bottom{
+            color: #fff;
+            font-size: 12px;
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header" >
+        <div>
+            <img src="http://ehall.scuec.edu.cn/portal/custom/img/school/logo/logo.png"  class="logo">
+            <div class="bh-headerBar-title">我的事务</div>          
+        </div>
+        <div class="load">
+            <span class="glyphicon glyphicon-user">&nbsp</span>欢迎您:<spna>LH(201721094059)</spna>
+            <a href="#" style="display: block; color: rgb(71, 151, 243);">注销</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 panel-default panel-body">
+                    <a href="#">
+                        <div class="panel panel-default panel-body col-md-3 col-md-offset-3 text-center" style="border-left: 4px solid #3A7E59;" >
+                            <div>申请数据</div>
+                        </div>
+                    </a>
+                    <a href="#">
+                        <div class="panel panel-default panel-body col-md-3 text-center" style="border-left: 4px solid #3A7E59;">
+                            <div>审批申请</div>
+                        </div>
+                    </a>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-12">
+                    <div  id="myCarousel" class="carousel slide">
+
+                        <!-- 轮播（Carousel）项目 -->
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <div style="height: 70%; width: 100%; background-color: ghostwhite;">
+                                        <div>
+                                            <div class='progress_inner'>
+                                            <div class='progress_inner__step'>
+                                              <label for='step-1'>1</label>
+                                            </div>
+                                            <div class='progress_inner__step'>
+                                              <label for='step-2'>2</label>
+                                            </div>
+                                            <div class='progress_inner__step'>
+                                              <label for='step-3'>3</label>
+                                            </div>
+                                            <div class='progress_inner__step'>
+                                              <label for='step-4'>4</label>
+                                            </div>
+                                            <div class='progress_inner__step'>
+                                              <label for='step-5'>5</label>
+                                            </div>
+                                        <input checked='checked' id='step-1' name='step' type='radio'>
+                                        <input id='step-2' name='step' type='radio'>
+                                        <input id='step-3' name='step' type='radio'>
+                                        <input id='step-4' name='step' type='radio'>
+                                        <input id='step-5' name='step' type='radio'>
+                                        <div class='progress_inner__bar'></div>
+                                        <div class='progress_inner__bar--set'></div>
+                                        <div class='progress_inner__tabs'>
+                                          <div class='tab tab-0'>
+<!--                                            <h3>我的申请</h3>-->
+                                            <table class="table table-striped" id="table">
+                                                <caption class="text-center" style="margin-top: 0px">我的申请</caption>
+                                                <thead>
+                                                    <tr>
+                                                        <th>申请表</th>
+                                                        <th>申请字段</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>本专科生</td>
+                                                        <td> 学号 姓名 </td>
+                                                    </tr>
+                                                 <tr>
+                                                        <td>本专科生</td>
+                                                        <td>学号 姓名</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                          </div>
+                                          <div class='tab tab-1'>
+                                            <h3>审批意见</h3>
+                                            <p>2</p>
+                                          </div>
+                                          <div class='tab tab-2'>
+                                            <h3>审批意见</h3>
+                                            <p>3</p>
+                                          </div>
+                                          <div class='tab tab-3'>
+                                            <h3>审批意见</h3>
+                                            <p>4</p>
+                                          </div>
+                                          <div class='tab tab-4'>
+                                            <h3>审批意见</h3>
+
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 轮播（Carousel）导航 -->
+                        <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <footer>
+            <p class="bottom">中南民族大学</p>
+        </footer>
+    </div>
+</body>
+</html>

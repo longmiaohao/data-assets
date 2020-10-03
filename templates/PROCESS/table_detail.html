@@ -1,0 +1,140 @@
+<html lang="ch">
+<head>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/bootstrap-select.min.css">
+    <script src="/static/PROCESS/js/bootstrap-select.min.js"></script>
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        th,td{
+            text-align: center;
+        }
+        li{
+            border-left: 5px solid whitesmoke;
+        }
+        li:hover{
+            background-color: wheat;
+        }
+    </style>
+</head>
+<body>
+<div class="panel panel-body panel-default">
+    <div class="col-md-8 col-md-offset-2">
+        {% for var in data%}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>
+                    <a class="text-left" data-toggle="collapse" data-parent="#accordion"
+                       href="#card_{{ var.STMC }}" onclick="get_fields('{{ var.STMC }}')">
+                        {{ var.STZWM }}
+                    </a>
+                     <a style="float: right" href="javascript:0" onclick="saveTable(this, '{{ var.STZWM }}')" name="{{ var.STMC }}" id="a_{{ var.STMC }}"><button type="button" id="{{ var.STMC }}" class="btn-info btn">添加</button></a>
+                </h4>
+            </div>
+            <div id="card_{{ var.STMC }}" class="panel-collapse collapse">
+                <div class="panel-body">
+                <table class="table table-striped" id="table_{{ var.STMC }}" >
+                <tbody></tbody>
+            </table>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
+<script type="application/javascript">
+    let categorys = [{% for var in categorys %}'{{var}}',{% endfor %}]
+    function getCount(){
+        let length = 0;
+        categorys.forEach(function (val){
+            length += localStorage.getItem(val)?JSON.parse(localStorage.getItem(val)).length:0
+        })
+        $("#choose_count", parent.document).text(length)
+    }
+    $(document).ready(function(){
+        getCount()
+        let table_category = "{{category}}"
+        if(localStorage.getItem(table_category)){
+            let tables = JSON.parse(localStorage.getItem(table_category))
+            tables.forEach(function (obj) {
+                $("#"+obj.en).text("取消添加")
+                $("#" + obj.en).removeClass("btn-info")
+                $("#" + obj.en).addClass("btn-danger")
+                document.getElementById("a_"+obj.en).onclick = function (){deleteTable(this, obj.zh)}
+            })
+        }
+    })
+    function saveTable(obj, zh) {
+        if(obj===undefined)
+            return
+        let tables = []
+        let json = {"en": obj.name, "zh": zh}
+        let table_category = "{{category}}"
+        if (localStorage.getItem(table_category) === null || localStorage.getItem(table_category) === '') {
+            localStorage.setItem(table_category, JSON.stringify([json])) //第一次添加
+        } else {
+            tables = JSON.parse(localStorage.getItem(table_category))  // 根据目录获取值
+            tables.push(json)
+            localStorage.setItem(table_category, JSON.stringify(tables))
+        }
+        $("#" + obj.name).text("取消添加")
+        $("#" + obj.name).removeClass("btn-info")
+        $("#" + obj.name).addClass("btn-danger")
+        obj.onclick = function (){deleteTable(this, zh)}
+        obj.removeEventListener('click', saveTable())
+        getCount()
+    }
+    function deleteTable(obj, zh){
+        if(obj === undefined)
+            return
+        $("#" + obj.name).text("添加")
+        $("#" + obj.name).removeClass("btn-danger")
+        $("#" + obj.name).addClass("btn-info")
+        let json = {"en": obj.name, "zh": zh}
+        let table_category = "{{category}}"
+        let tables = JSON.parse(localStorage.getItem(table_category))
+        tables.splice(tables.indexOf(json), 1)
+        localStorage.setItem(table_category, JSON.stringify(tables))
+        obj.onclick = function (){saveTable(this, zh)}
+        obj.removeEventListener('click', deleteTable())
+        getCount()
+    }
+
+    function get_fields(table_name) {
+        if($("#card_" + table_name + " tbody").html() !== "")
+            return
+        $.ajax({
+            url: "{% url 'process_tabledetail'%}?category={{category}}",
+            type: "post",
+            data: {"table_name": table_name, "csrfmiddlewaretoken": '{{csrf_token}}'},
+            success: function (res) {
+                let count = 0
+                let tr = "<tr>"
+                $("#card_" + table_name + " tbody").html('')
+                if (res.zd.length === 0) {
+                    $("#table_" + table_name + " tbody").append("<tr><td>无字段信息</td></tr>")
+                    return ;
+                }
+                res.zd.forEach(function (val, index) {
+                    tr += "<td>" + (index+1) + ": "+ val + "</td>"
+                    if(count === 5){
+                        count = 0
+                        $("#table_" + table_name + " tbody").append(tr + "</tr>")
+                        tr = "<tr>"
+                    }else {
+                        count++
+                    }
+                })
+
+            },
+            error: function (){
+                console.log("网络错误")
+            }
+        })
+    }
+</script>

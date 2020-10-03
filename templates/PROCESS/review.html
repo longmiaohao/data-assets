@@ -1,0 +1,172 @@
+<html lang="ch">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/bootstrap-select.min.css">
+    <script src="/static/PROCESS/js/bootstrap-select.min.js"></script>
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        th,td{
+            text-align: center;
+        }
+        .header{
+            height: 44px;
+            width: 100%;
+            background-color: #3A7E59;
+            padding-left: 20px;
+        }
+        .logo{
+            height: 40px;
+            float: left;
+        }
+        .bh-headerBar-title{
+            color: #fff;
+            float: left;
+            font-size: 24px;
+            line-height: 44px;
+            margin-left: 8px;
+            margin-top: -1.5px;
+            font-weight: 700;
+        }
+        .footer{
+        background-color: #3A7E59;
+        height: 32px;
+        text-align: center;
+        width: 100%;
+        padding: 6px 0;
+        margin-top: 43px;
+        }
+        .gan {
+            border-left: 4px solid #3A7E59;
+            border-right: 4px solid #3A7E59;
+            width: 200px;margin:10px auto;
+            height: 35px;
+        }
+        .h1-1{
+            color: #666;
+            font-size: 30px;
+            font-weight: 700;
+            text-align: center ; 
+        }
+        .col-md-6{
+            font-size: 16px;
+            font-weight: 700;
+            border-left: 4px solid #3A7E59;
+            padding-left: 8px;
+            line-height: 16px;
+            min-height: 0!important;
+            margin-bottom: 8px;
+        }
+        h4{
+            margin-top:4px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header" >
+        <div>
+            <img src="http://ehall.scuec.edu.cn/portal/custom/img/school/logo/logo.png"  class="logo">
+            <div class="bh-headerBar-title">数据使用审批</div>          
+        </div>
+    </div>
+
+    <div  class="gan" >
+        <h1 class="text-center h1-1" >数据使用审批</h1>
+    </div>
+
+    <!-- <h1 class="text-center">数据使用审批</h1> -->
+    <div class="panel panel-body panel-default">
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title text-center">
+                        <a data-toggle="collapse" data-parent="#accordion"
+                           href="#collapseOne">
+                            LH(210721094059)申请数据详情(点击折叠)
+                        </a>
+                    </h4>
+                </div>
+		        <div id="collapseOne" class="panel-collapse collapse in">
+			<div class="panel-body">
+				<table class="table table-striped" id="table">
+                    <thead>
+                        <tr>
+                            <th>申请表</th>
+                            <th>申请字段</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>本专科生</td>
+                        <td>姓名 学号</td>
+                    </tr>
+                    <tr>
+                        <td>教职工</td>
+                        <td>职工号 姓名</td>
+                    </tr>
+                    <tr>
+                        <td>本专科生</td>
+                        <td>姓名 学号</td>
+                    </tr>
+                    </tbody>
+                </table>
+			</div>
+		</div>
+	        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-body panel-default">
+                <div class="col-md-6">
+                    <label for="instruction"><h4>申请说明</h4></label>
+                    <div>
+                        <textarea readonly="readonly" id="instruction" style=" resize: vertical;width: 100%;height: 100px"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="comment"><h4>备注</h4></label>
+                    <div>
+                        <textarea readonly="readonly" id="comment" style=" resize: vertical;width: 100%;height: 100px"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-body panel-default">
+                <div class="col-md-6">
+                    <label for="instruction"><h4>审批意见</h4></label>
+                    <div>
+                        <textarea id="approval" style=" resize: vertical;width: 100%;"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="comment"><h4>审批备注</h4></label>
+                    <div>
+                        <textarea id="approval_comment" style=" resize: vertical;width: 100%;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-5 text-center">
+            <button class="btn btn-info">同意</button>&nbsp&nbsp
+            <button class="btn btn-danger">不同意</button>
+        </div>
+    </div>
+    <div class="footer">
+        <footer>
+            <p class="text-center">中南民族大学</p>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
+<script type="application/javascript">
+    $("#table_field0").selectpicker({   //选择器配置
+                'countSelectedText':"已选中{0}个{1}",
+                'noneSelectedText': "请选择",
+                'deselectAllText':'全不选',
+                'selectAllText': '全选',
+                'showSubtext':true
+     })
+</script>

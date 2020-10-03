@@ -1,0 +1,261 @@
+<html lang="ch">
+<head>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/bootstrap-select.min.css">
+    <script src="/static/PROCESS/js/bootstrap-select.min.js"></script>
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        th,td{
+            text-align: center;
+        }
+        #submit{
+            color: #fff;
+            background-color: #3C94C4;
+            border: none;
+        }
+        .header{
+            height: 50px;
+            width: 100%;
+            padding: 8px 0;
+            padding-left: 20px;
+            /* overflow: hidden; */
+            background-color:#3A7E59;
+        }
+        .logo img{
+            height: 40px;
+        }
+        img {
+            border: 0;
+            vertical-align: middle;
+        }
+        .title{
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            
+            line-height: 44px;
+            position:absolute;
+            top: 4px;
+            left: 250px;
+        } 
+        .footer{
+            width: 100%;
+            height: 30px;
+            background-color:  #3A7E59;
+            margin-top: 0;
+            /* margin-bottom: 0; */    
+        }
+        .gan{
+            border-left: 4px solid #3A7E59;border-right: 4px solid #3A7E59;width: 200px;margin:10px auto;height: 35px;"
+        }
+        label{
+                font-size: 16px;
+                font-weight: 700;
+                border-left: 4px solid #3A7E59;
+                padding-left: 8px;
+                line-height: 16px;
+                min-height: 0!important;
+                margin-bottom: 8px;
+                float: none!important;
+        }
+        h4{
+            margin-top:4px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="http://ehall.scuec.edu.cn/portal/custom/img/school/logo/logo.png">           
+            
+        </div>
+        <div class="title">数据使用申请</div>
+    </div>
+    <div  class="gan" >
+        <h1 class="text-center" style="color: #666;
+        font-size: 30px;
+        font-weight: 700;
+        ">数据使用申请</h1>
+    </div>
+    <div class="panel panel-body panel-default">
+        
+        <div class="col-md-8 col-md-offset-2" id="table_apply">
+            <div class="panel panel-body panel-default">
+                <div  class="text-right"><a href="javascript:0"  title
+                ="添加新表"><span class="glyphicon glyphicon-plus" onclick="add_new_panel(this)"></span></a></div>
+                <div class="panel-body panel col-md-3">
+                    <label for="table_name0  "  ><h4>申请表</h4></label>
+                    <select id="table_name0" name="table_name0" class="input-group form-control "  >
+                        <!-- <option value="T-QXZ" >请选择</option> -->
+                        <option value="T_BZKS" >本/专科生</option>
+                        <option value="T_JZG">教职工</option>
+                        <option value="T_ZXBZ">执行标准</option>
+                    </select>
+                </div>
+                <div class="panel-body panel col-md-9 table-hvoer-1">
+                    <label for="table_field0 ">
+                    <h4 >申请字段</h4></label>
+                    <select id="table_field0" name="table_field0" class="input-group form-control" multiple >
+                        <option value="All">All</option>
+                        <option value="XH">学号</option>
+                        <option value="XM">姓名</option>
+                        <option value="XB">性别</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-body panel-default">
+                <div class="col-md-6">
+                    <label for="instruction "><h4 >申请说明</h4></label>
+                    <div>
+                        <textarea id="instruction" style=" resize: vertical;width: 100%;height: 100px"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="comment " ><h4 >备注</h4></label>
+                    <div>
+                        <textarea id="comment" style=" resize: vertical;width: 100%;height: 100px"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-md-offset-5 text-center">
+            <button id="submit" class="btn btn-default" data-toggle="modal" onclick="getUserData()">提交申请</button>
+        </div>
+    </div>
+    
+    <div class="footer">        
+        <footer>
+            <p class="text-center" style="color: #fff; padding-top:4px ;text-align: center;" >  &nbsp中南民族大学</p>
+        </footer>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					申请数据确认
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped" id="table">
+                    <caption class="text-center">申请数据详情</caption>
+                    <thead>
+                        <tr>
+                            <th>申请表</th>
+                            <th>申请字段</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" onclick="userSubmit()">
+					提交更改
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+</body>
+</html>
+<script type="application/javascript">
+    $("#table_field0").selectpicker({   //选择器配置
+                'countSelectedText':"已选中{0}个{1}",
+                'noneSelectedText': "请选择",
+                'deselectAllText':'全不选',
+                'selectAllText': '全选',
+                'showSubtext':true
+     })
+    let add_number = 1;
+    function remove_panel(obj) {
+        if(confirm("是否删除本页？")) {
+            obj.parentNode.parentNode.parentNode.remove(self)
+            add_number--;
+        }
+    }
+    function add_new_panel(obj){
+        let table_name = $("#table_name0").html() //获取表名
+        let html = "<div class=\"panel panel-body panel-default\">\n" +
+            "                <div  class=\"text-right\"><a href=\"javascript:0\" title\n" +
+            "                =\"添加新表\"><span class=\"glyphicon glyphicon-plus\"  onclick=\"add_new_panel(this)\"></span></a></div>\n" +
+            "                <div class=\"panel-body panel col-md-3\">\n" +
+            "                    <label for=\"table_name"+ add_number +"\"><h4>申请表</h4></label>\n" +
+            "                    <select id=\"table_name"+ add_number +"\" name=\"table_name"+add_number+"\" class=\"input-group form-control\">\n" +
+                                    table_name +
+            "                    </select>\n" +
+            "                </div>\n" +
+            "                <div class=\"panel-body panel col-md-9\">\n" +
+            "                    <label for=\"table_field\"><h4>申请字段</h4></label>\n" +
+            "                    <select id=\"table_field"+ add_number +"\" name=\"table_field\" class=\"input-group form-control\" multiple>" +
+            "                       <option value='none'>请选择申请表</option>" +
+            "                    </select>\n" +
+            "                </div>\n" +
+            "            </div>"
+        $("#table_apply").append(html)
+        $("select[name^='table_field']").selectpicker({   //选择器配置
+                'countSelectedText':"已选中{0}个{1}",
+                'noneSelectedText': "请选择",
+                'deselectAllText':'全不选',
+                'selectAllText': '全选',
+                'showSubtext':true
+     })
+        obj.parentNode.title = "删除本页"
+        obj.parentNode.innerHTML = "<span class=\"glyphicon glyphicon-remove\"  onclick=\"remove_panel(this)\"></span>"
+         //解绑事件
+        ++add_number
+    }
+    let apply_json = []
+    function getUserData(){
+        let tr = ""
+        $("#table tbody").html("")
+        for(let i = 0; i < add_number; i++) {
+            let table_field = "#table_field" + i
+            let zd = $(table_field).val()
+            if (zd === null) {
+                if (add_number === 1) {
+                    alert("申请数据不完整")
+                    return
+                }
+                continue
+            } else if (zd[0] === "All")
+                zd = ["全部"]
+            let table_name = "#table_name" + i
+            let table_field_zwm = ""
+            if (zd[0] !== "全部")
+                for (let i = 0; i < $(table_field).find("option:selected").length; i++)
+                    table_field_zwm += $(table_field).find("option:selected")[i].text + ' '
+            else
+                table_field_zwm = "全部"
+            let json_data = {
+                "table_name_zwm": $(table_name).find("option:selected").text(),
+                "table_name": $(table_name).val(),
+                "table_field": zd,
+                "table_field_zwm": table_field_zwm
+            }
+            $("#table").append("<tr>" + "<td>"+ json_data.table_name_zwm +"</td>" + "<td>"+ json_data.table_field_zwm +"</td>" + "</tr>")
+            apply_json.push(json_data)
+        }
+        $("#myModal").modal("show")
+    }
+    function userSubmit() {
+        console.log(1)
+        getUserData()
+        console.log(apply_json)
+    }
+</script>

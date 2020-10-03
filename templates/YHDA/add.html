@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/XTDA/add/css/bootstrap-datepicker.min.css">
+    <script src="/static/XTDA/add/js/bootstrap-datepicker.min.js"></script>
+    <script src="/static/XTDA/add/js/bootstrap-datepicker.zh-CN.min.js"></script>
+    <style>
+        .tubiao{width: 30px;  height: 25px; position: absolute;    right: 42%; padding-top: 0px;opacity: 1;}
+        .tubiao:hover{opacity: 1;}
+    </style>
+    <style type="text/css">
+        .form-control{
+            width: 300px;
+        }
+        .col-md-3,.col-md-4{
+            opacity: 0.9;
+        }
+        h3{
+          background-color:  #124a94;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="panel panel-heading">
+        <h1 class="text-center">{{ title }}</h1>
+        {% if err_msg %}
+            <h2 class="text-center text-warning">{{ err_msg }}</h2>
+        {% endif %}
+        <a href="{% url 'yhda_index' %}"><button type="button" class="btn btn-info btn-sm" style="position:absolute; left: 10px; top: 10px;"><i class="glyphicon glyphicon-backward"></i></button></a>
+    </div>
+    <form method="post" action="{% url "yhda_add" %}">
+        {% csrf_token %}
+    {% if YHBH %}
+        <input type="text" value="{{ YHBH }}" name="YHBH" hidden>
+    {% endif %}
+
+    <div class="col-md-12">
+    <h3 class="text-center">用户</h3><hr>
+    <div class="col-md-4">
+        <label for="YHLX" class="control-label"><span style="color:red">*</span>用户类型</label>
+        <select class="form-control" id="YHLX" name="YHLX" required/>
+        {% for var in YHLXS %}
+            <option value="{{ var.DM }}" {% if var.DM == data.YHLX %}selected{% endif %}{% if var.DM == YHLX %}selected{% endif %}>{{ var.MC }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="YHM" class="control-label"><span style="color:red">*</span>用户名称</label>
+        <input type="text" class="form-control" id="YHM" name="YHM" value="{{ data.YHM }}{{ YHM }}" required />
+    </div>
+
+
+    <div class="col-md-4">
+            <label for="MM" class="control-label">用户密码</label> <a id="click_eye" href="javascript:0" onclick="show_passwd()" title="查看密码"><span id="eye" class="glyphicon glyphicon-eye-close"></span></a>
+            <input type="password" data-role = "none" class="form-control" id="MM" name="MM" value="{{ data.MM }}{{ MM }}">
+    </div>
+
+
+
+    </div>
+    <div class="col-md-12">
+            <h3 class="text-center">系统</h3><hr>
+            <div class="col-md-3">
+                <label for="SSXT" class="control-label"><span style="color:red">*</span>所属系统</label>
+                <select class="form-control" id="SSXTBH" name="SSXTBH" required>
+                    <option selected></option>
+                    {% for var in SSXT %}
+                        <option value="{{ var.BH }}" {% if data.SSXTBH == var.BH %}selected{% endif %} {% if SSXTBH == var.BH %}selected{% endif %}>{{ var.ZWM }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+{#            <div class="col-md-3">#}
+{#                <label for="ZWM" class="control-label"><span style="color:red">*</span>系统数据库ip</label>#}
+{#                <input type="text" class="form-control" id="SJKFWQIP" name="SJKFWQIP" value="{{ data.SJKFWQIP }}{{ SJKFWQIP }}" required readonly/>#}
+{#            </div>#}
+{#            <div class="col-md-3">#}
+{#                <label for="JC" class="control-label">系统数据库类型</label>#}
+{#                <input type="text" class="form-control" id="SJKFWQLXMC" name="SJKFWQLXMC" value="{{ data.SJKFWQLXMC }}" readonly/>#}
+{#            </div>#}
+{#            <div class="col-md-3">#}
+{#                <label for="JC" class="control-label">系统数据库版本</label>#}
+{#                <input type="text" class="form-control" id="SJKBB" name="SJKBB" value="{{ data.SJKBB }}" readonly/>#}
+{#            </div>#}
+        </div>
+
+    <div class="col-md-12 text-center">
+        <hr/>
+        <button type="submit" class="btn btn-primary" style="width: 30%;" onclick="">提交</button>
+    </div>
+    </form>
+</body>
+<script>
+    function show_passwd() {
+        $("#MM").attr("type", "text")
+        $("#click_eye").attr("onclick", "hidden_passwd()")
+        $("#click_eye").attr("title", "关闭查看")
+        $("#eye").removeClass()
+        $("#eye").addClass("glyphicon glyphicon-eye-open")
+    }
+    function hidden_passwd() {
+        $("#MM").attr("type", "password")
+        $("#click_eye").attr("onclick", "show_passwd()")
+        $("#click_eye").attr("title", "查看密码")
+        $("#eye").removeClass()
+        $("#eye").addClass("glyphicon glyphicon-eye-close")
+    }
+</script>
+</html>

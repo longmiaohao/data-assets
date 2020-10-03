@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>数据资产管理</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/css/jquery.resizableColumns.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
+    <script src="/static/js/jquery.resizableColumns.min.js"></script>
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-resizable.min.js"></script>
+    {#导出#}
+{#    <link href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css" rel="stylesheet">#}
+{#    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>#}
+{#    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>#}
+{#    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script>#}
+{#    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>#}
+{#    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/extensions/export/bootstrap-table-export.min.js"></script>#}
+	<style type="text/css">
+		th{
+			background-color: #124a94;
+			color:white;
+            text-align: center;
+		}
+        tr{
+            text-align: center;
+        }
+        .footer{
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-bottom: 0;
+            height: 40px;
+        }
+        .panel{
+            margin-bottom: 0;
+        }
+        .btn{
+            padding: 5px 5px;
+        }
+        .form-control{
+            height: 30px;
+            width: 80%;
+            margin: 0;
+            padding: 0;
+        }
+        select{
+            height: 30px;
+        }
+        .table>tbody>tr:hover{
+            background-color: #124994;
+            color: white;
+        }
+        .panel-body{
+            padding-top: 0;
+        }
+        span{
+            width: 30px;
+        }
+        .password{
+            border: 0;
+            background-color: inherit;
+            outline: none;
+            text-align: center;
+        }
+		ul>li:hover{
+			background-color: white;
+		}
+	</style>
+</head>
+<body>
+	<div class="panel panel-default">
+        {% if err_msg %}
+            <h3 class="text-warning text-center">{{ err_msg }}</h3>
+        {% endif %}
+		<div class="panel panel-body">
+			<div class="row">
+				<nav class="navbar navbar-default" role="navigation">
+				    <div class="container-fluid">
+				    <div class="navbar-header">
+				        <a class="navbar-brand" href="#">微服务</a>
+				    </div>
+				    <div>
+				        <ul class="nav navbar-nav">
+				            <li class="{% if request.path == "/xtda" %}active{% endif %}"><a href="{% url "xtda_index" %}">系统档案</a></li>
+				            <li class="{% if request.path == "/yhda" %}active{% endif %}"><a href="{% url "yhda_index" %}">用户档案</a></li>
+							<li><a target="_blank" href="{% url "sjgxgk_index" %}">数据共享概况</a></li>
+				            <li class="dropdown">
+				                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="xtlx">
+				                    {{ show_title }}
+				                    <b class="caret"></b>
+				                </a>
+				                <ul class="dropdown-menu">
+                                    <li><a href="{% url "yhda_index" %}">全部</a></li>
+                                    {% for var in YHLXS %}
+				                    <li ><a href="{% url "yhda_index" %}?lx={{ var.DM }}&keyword={{ keyword }}&dw_query={{ GLDWDM }}">{{ var.MC }}</a></li>
+                                    {% endfor %}
+				                </ul>
+				            </li>
+				        </ul>
+				    </div>
+                       <div class="navbar-header" style="float: right;display: inline">
+				        <a class="navbar-brand" href="#">数据资产管理</a>
+				    </div>
+				    </div>
+				</nav>
+			</div>
+            <div class="input-group">
+                <form method="post" action="{% url "yhda_index" %} "style="float: right">
+                    {%  if lx %}
+                        <input hidden type="text" name="lx" value="{{ lx }}">
+                    {% endif %}
+                    {%  csrf_token %}
+                    <select class="form-control" name="dw_query" id="dw_query" style="width: 150px;">
+                        <option value="" href="{% url "yhda_index" %}?keyword={{ keyword }}" selected>全部</option>
+                        {% for var in GLDWDMs %}
+                            <option value="{{ var.DWDM }}" {% if var.DWDM == GLDWDM %} selected {% endif %} href="{% url "yhda_index" %}?dw_query={{ var.DWDM }}&keyword={{ keyword }}">{{ var.DWMC }}</option>
+                        {% endfor %}
+                    </select>
+                    <input style="width: 300px; margin-right: 2px; padding-left: 10px" type="text" class="form-control" name="keyword" placeholder=" 用户名" value="{{ keyword }}"/>
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
+                </form>
+                <a href="{% url "yhda_add" %}"><button type="button" class="btn btn-primary" style="margin-left: 2px">新增</button></a>
+                <button type="button" class="btn btn-danger" style="margin-left: 2px" onclick="delete_by_bhs()"  data-toggle="modal" data-target="#exampleModal">删除</button>
+            </div>
+		</div>
+	</div>
+	<div class="panel panel-body">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- 添加容器内的一列 宽度为4 -->
+{#                        <div id="toolbar" class="select">#}
+{#                          <select class="form-control">#}
+{#                            <option value="">Export Basic</option>#}
+{#                            <option value="all">Export All</option>#}
+{#                            <option value="selected">Export Selected</option>#}
+{#                          </select>#}
+{#                        </div>#}
+                        <table class="table table-striped table-hover" id="table"
+                            data-show-columns="true"
+{#                            data-search="true"#}
+                            data-toolbar="#toolbar"
+{#                            data-show-export="true"#}
+                            data-resizable="true">
+					  <thead>
+					    <tr>
+						<th  data-switchable="false">
+							<input type="checkbox" id="allcheck" onclick="quanxuan()">
+						</th>
+						<th data-sortable="true">用户类型</th>
+						<th data-sortable="true">用户名称</th>
+						<th>用户密码</th>
+						<th>所属系统</th>
+						<th data-sortable="true">系统数据库ip</th>
+						<th data-sortable="true">系统数据库类型</th>
+						<th data-sortable="true">系统数据库版本</th>
+						<th>操作</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+                      {% for var in data %}
+					    <tr id="t{{ var.YHBH }}">
+							<td><input type="checkbox" value="{{ var.YHBH }}" name="check" id="{{ var.YHBH }}"></td>
+							<td>{{ var.YHLXMC }}</td>
+							<td>{{ var.YHM }}</td>
+							<td><input readonly type="password" value="{{ var.MM }}" class="password"  yhbh="{{ var.YHBH }}" plaintext='' id="{{ var.YHBH }}passwd">
+                                {% if var.MM %}
+                                    <a id="{{ var.YHBH }}click_eye" href="javascript:0" onclick="show_passwd({{ var.YHBH }})" title="查看密码">
+                                        <span id="{{ var.YHBH }}eye" class="glyphicon glyphicon-eye-close"></span>
+                                    </a>
+                                {% endif %}
+                            </td>
+							<td>{{ var.SSXTMC }}</td>
+							<td>{{ var.SJKFWQIP }}</td>
+							<td>{{ var.SJKFWQLXMC }}</td>
+							<td>{{ var.SJKBB }}</td>
+							<td>
+					      	<a href="{% url "yhda_edit" %}?yhbh={{ var.YHBH }}"><button type="button" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span></button></a>
+					      	<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" onclick="set_bh({{ var.YHBH }})"><span class="glyphicon glyphicon-trash"></span></button>
+					      </td>
+						</tr>
+                      {% endfor %}
+					  </tbody>
+					</table>
+					<div class="row">
+                        <div class="col-md-4">
+                            <p style="position:relative; padding-top: 10px">共有<span style="color: blue;" id="page_num">{{ page_info.num }}</span>条记录, 当前第<span style="color: blue">{{ page }}/{{ page_info.page_num }}</span>页</p>
+                        </div>
+                          <form method="post">
+                            {% csrf_token %}
+                            <div class="col-md-6 col-md-offset-2 text-right">
+                                <button type="submit" class="btn btn-default" onclick="return onsubmt(1)"><span class="	glyphicon glyphicon-home"></span></button>
+                                <button type="submit" class="btn btn-default" onclick="return onsubmt({{ page|add:-1 }})"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                                <button type="submit" class="btn btn-default" onclick="return onsubmt({{ page|add:1 }})"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                                <button type="submit" class="btn btn-default" onclick="return onsubmt({{ page_info.page_num }})"><span class="glyphicon glyphicon-fast-forward"></span></button>
+                                <div style="display: inline">
+                                    跳转到:<input type="text" name="page" id="page" value="{{ page }}" style="height:22px; width: 40px; margin: 5px 5px;">页
+                                    <button type="submit" class="btn btn-default" onclick="return onsubmt(-1)"><span class="glyphicon glyphicon-share-alt"></span></button>
+                                </div>
+                            </div>
+                        </form>
+					</div>
+				</div>
+			</div>
+	</div>
+	<div class="panel panel-footer footer">
+		<footer>
+			<p class="text-center">Copyright©中南民族大学</p>
+		</footer>
+	</div>
+</div>
+{#提示模态框#}
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">提示消息</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        是否删除?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick='delete_by_bh(this.value)' value="" id="confirm">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script>
+    $('#dw_query').change(function(){
+        window.location.href = $(this).children('option:selected').attr("href")
+    })
+    function show_password(pid) {
+        let that = $("#" + pid + "passwd")
+        if (that.val() === "")
+            return
+        let attr = that.attr("plaintext")
+        if (that.attr("plaintext") !== ""){
+            that.val(that.attr("plaintext"))
+            that.attr("type",'text')
+            return
+        }
+        $.ajax({
+            url: "{% url "yhda_decrypt" %}",
+            contentType: "application/x-www-form-urlencoded",
+            type: "post",
+            async:false,
+            dataType: 'json',
+            data: {"YHBH": that.attr("yhbh"), "csrfmiddlewaretoken": "{{ csrf_token }}"},
+            success: function (res) {
+                that.attr("plaintext", res.plaintext)
+                that.attr("cypher", that.val())
+                that.val(res.plaintext)
+                that.attr("type",'text')
+                return true
+            },
+            error: function () {
+                console.log("解密失败")
+                return false
+            }
+        })
+    }
+    function hide_password(pid) {
+        let that = $("#" + pid + "passwd")
+        if (that.val() === "")
+            return
+        that.val(that.attr("cypher"))
+        that.attr("type", 'password')
+    }
+
+    function show_passwd(pid) {
+        show_password(pid)
+        $("#" + pid + 'passwd').attr("type", "text")
+        $("#" + pid + "click_eye").attr("onclick", "hidden_passwd(" + pid + ")")
+        $("#" + pid + "click_eye").attr("title", "关闭查看")
+        $("#" + pid + "eye").removeClass()
+        $("#" + pid + "eye").addClass("glyphicon glyphicon-eye-open")
+    }
+    function hidden_passwd(pid) {
+        hide_password(pid)
+        $("#"+pid+"passwd").attr("type", "password")
+        $("#"+ pid + "click_eye").attr("onclick", "show_passwd("+ pid +")")
+        $("#"+ pid + "click_eye").attr("title", "查看密码")
+        $("#" + pid + "eye").removeClass()
+        $("#" + pid + "eye").addClass("glyphicon glyphicon-eye-close")
+    }
+
+    function onsubmt(val){
+        if (val === -1)
+            val = $("#page").val();
+        if(val == {{ page }} || val == 0 || val > {{ page_info.page_num }})
+            return false;
+        $("#page").val(val);
+    }
+    function set_bh(bh){
+        $("#confirm").attr("value", bh)
+    }
+    function delete_by_bh(BH){
+        if (BH === "" || BH === "undefined")
+            return
+        $.ajax({
+            url: "{% url "yhda_delete" %}",
+            contentType: "application/x-www-form-urlencoded",
+            type: "post",
+            dataType: 'json',
+            data: {"YHBH": BH, "csrfmiddlewaretoken": "{{ csrf_token }}"},
+            success: function (res){
+                if (res.code === "01"){
+                    console.log("successful")
+                    $("#exampleModal").modal('hide')
+                    if(typeof(BH) == "number"){
+                        $("#t" + BH).remove();
+                        $("#page_num").html($("#page_num").html() - 1)
+                        return
+                    }
+                    BH = BH.split(",")  //拆分
+                    for(let i  = 0; i < BH.length; i++) {
+                        $("#t" + BH[i]).remove();
+                        $("#page_num").html($("#page_num").html() - 1)
+                    }
+                }
+                else {
+                    console.log("删除失败")
+                }
+            }
+        })
+    }
+    function delete_by_bhs(){
+        let BHS = []
+        let checks = $("input[name='check']:checked")
+        for (let i = 0; i < checks.length; i++){
+            BHS.push(checks[i].id)
+        }
+        $("#confirm").attr("value", BHS)
+        $("#confirm").attr("onclick", "delete_by_bh(this.value)")
+    }
+    function quanxuan() {
+        var allcheck = $("#allcheck")[0];
+        var check = $("input[name='check']");
+        for(var i = 0; i < check.length; i++) {
+            check[i].checked = allcheck.checked;
+        }
+    }
+    function setAll(){
+        if(!$(".check").checked){
+            $("#allcheck").prop("checked",false);
+        }
+        var checklength=$("input[type='checkbox'][name='check']").length;
+        var checkselect=$("input[type='checkbox'][name='check']:checked").length;
+        if(checklength===checkselect){
+            $("#allcheck").prop("checked",true);
+        }
+        var checks =  $("input[type='checkbox']")
+        var arr= [];
+        for(var i = 1; i < checks.length; i++){
+            if (checks[i].checked){
+                arr.push(checks[i].id)
+            }
+        }
+    }
+    $("input[name='check']").click(function (){
+        setAll()
+    })
+</script>
+{#table相关#}
+<script>
+  $(function() {
+    $('#table').bootstrapTable()
+  })
+</script>
+</html>

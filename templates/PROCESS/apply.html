@@ -1,0 +1,119 @@
+<html lang="ch">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/PROCESS/css/bootstrap-select.min.css">
+    <script src="/static/PROCESS/js/bootstrap-select.min.js"></script>
+    <style>
+        .modal-dialog{
+            width: 80%;
+        }
+        th,td{
+            text-align: center;
+        }
+        li{
+            border-left: 5px solid whitesmoke;
+        }
+        li:hover{
+            background-color: wheat;
+        }
+        .footer{
+            width: 100%;
+            height: 30px;
+            margin-top: 0;
+            text-align: center;
+            /* margin-bottom: 0; */
+        }
+    </style>
+</head>
+<body>
+    <div class="panel panel-default panel-heading">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">数据申请使用</a>
+        </div>
+        <div>
+        <ul class="nav navbar-nav">
+            {% for var in category %}
+            <li {% if forloop.counter == 1 %}class="active"{% endif %} onclick="nav_active(this, '{{var}}')"><a href="#">{{var}}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="text-right" style="padding-top: 10px">
+            <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal" onclick="confirm_table()">已选择(<span id="choose_count">0</span>)</button>
+        </div>
+    </div>
+    </div>
+    </nav>
+    </div>
+    <div class="panel panel-body panel-default">
+        <iframe id="frame" src="{% url 'process_tabledetail'%}" width="100%" height="85%" style="border: 0px;"></iframe>
+    </div>
+    <div class="footer">
+        <footer>
+            <p class="bottom">中南民族大学</p>
+        </footer>
+    </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					申请数据确认
+				</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped" id="table">
+                    <caption class="text-center">申请数据详情</caption>
+                    <thead>
+                        <tr>
+                            <th>目录</th>
+                            <th>表名</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" onclick="userSubmit()">
+					提交更改
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+</body>
+</html>
+<script type="application/javascript">
+    $(document).ready(function(){
+        localStorage.clear() //清除缓存
+    })
+    function nav_active(obj, category){
+        $(".active").removeClass('active')
+        obj.className = "active"
+        $("#frame").attr("src", "{% url 'process_tabledetail' %}?category=" + category)
+    }
+    function confirm_table() {
+            $("#table tbody").html("")
+            let category = [{% for var in category %}'{{var}}',{% endfor %}]
+            category.forEach(function (val){ //获取各个目录的表
+                let table = localStorage.getItem(val)
+                if( table !== "" && table !== null){
+                    JSON.parse(table).forEach(function (value) {
+                        let tr = "<tr>"
+                        tr += "<td>" + val + "</td><td>" + value.zh + "</td>"
+                        $("#table tbody").append(tr)
+                    })
+                }
+            })
+    }
+</script>
