@@ -14,6 +14,7 @@
     <link href="/static/css/bootstrap-table.min.css" rel="stylesheet">
     <script src="/static/js/jquery.resizableColumns.min.js"></script>
     <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-locale-all.min.js"></script>
     <script src="/static/js/bootstrap-table-resizable.min.js"></script>
     <style type="text/css">
         p,h1{
@@ -120,7 +121,8 @@
                       formatRecordsPerPage:function(pageNumber)
                       {
                         return pageNumber+'行每页';
-                      }
+                      },
+                    locale: "zh-CN",
                 })
         $('#table1').bootstrapTable({
                                           //自定义分页字符串显示为中文
@@ -132,7 +134,8 @@
                       formatRecordsPerPage:function(pageNumber)
                       {
                         return pageNumber+'行每页';
-                      }
+                      },
+            			locale: "zh-CN",
                 })
       })
     let line = echarts.init(document.getElementById('lines'));

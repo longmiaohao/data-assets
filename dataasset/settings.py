@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'd+#4ab%#rm#gy$26k3zls3%bseis5*#a-qq#-_0=76yk3(qj_j'
-
+SESSION_COOKIE_AGE = 60*30  # cookie有效期为30分钟
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'index.apps.IndexConfig',
+    'django_cas_ng',
 ]
 
 MIDDLEWARE = [
@@ -47,7 +48,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas_ng.middleware.CASMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # 'django.contrib.auth.backends.ModelBackend',	# django自带后台认证
+    'django_cas_ng.backends.CASBackend',    # 用户自定义后台认证
+)
+
+CAS_SERVER_URL = 'http://id.scuec.edu.cn/authserver/'  # 认证服务器地址
 
 ROOT_URLCONF = 'dataasset.urls'
 
@@ -80,7 +89,7 @@ DATABASES = {
         'NAME': 'XSCS',
         'USER': 'usr_sjzc',
         'PASSWORD': 'Sjzc#698742',
-        'HOST': '192.168.120.31',
+        'HOST': '127.0.0.1',
         'PORT': '1521'
     }
 }

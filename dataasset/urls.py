@@ -19,10 +19,11 @@ from django.views.generic.base import RedirectView
 from index import views as index_view
 from sjgxgk import views as sjgxgk_view
 from process import views as process_view
+import django_cas_ng.views  # 导入模块
 
 urlpatterns = [
-    # url(r'^crud/(?P<value>\d*)$', api_view.dispatch_by_method, name="dispatch"),
-    # url(r'^platform/add', api_view.platform_insert, name="platform_insert"),
+    url(r'^accounts/login', django_cas_ng.views.LoginView.as_view(), name='cas_ng_login'),  # 认证跳转
+    url(r'^accounts/logout', django_cas_ng.views.LogoutView.as_view(), name='cas_ng_logout'),  # 注销
     url(r"xtda_data", index_view.xtda_data, name="xtda_data"),
     url(r'^favicon\.ico$', RedirectView.as_view(url='/static/img/favicon.ico')),
     url(r"xtda_delete", index_view.xtda_delete, name="xtda_delete"),

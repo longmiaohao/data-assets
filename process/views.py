@@ -9,9 +9,12 @@ def index(request):
 
 
 def apply(request):
+    if request.method == 'POST':
+        print(request.POST.get("data"))
+        for var in json.loads(request.POST.get("data")):
+            print(var["value"])
     rawsql = RawSql()
     sql = "select STGMLMC from V_SJZC_GXST group by STGMLMC"  # 表获取分类
-    print(sql)
     category = rawsql.get_list(sql)
     rawsql.close()
     return render(request, "PROCESS/apply.html", locals())
@@ -26,14 +29,11 @@ def tabledetail(request):
     rawsql = RawSql()
     if request.method == "POST":
         sql = "select zdzwm from V_SJZC_GXST where STGMLMC='%s' and STMC='%s'  order by  zdzwm" % (category, request.POST.get("table_name"))
-        data = rawsql.get_list(sql)
-        rawsql.close()
-        data.remove("处理日期")
-        data.remove("WID")
-        data.remove("备用1")
-        data.remove("备用2")
-        data.remove("操作类型")
-        data.remove("数据来源")
+        res = rawsql.get_list(sql)
+        data = []
+        for var in res:
+            if var not in ["处理日期", "WID", "备用1", "备用2", "操作类型", "数据来源"]:
+                data.append(var)
         return JsonResponse({"zd": data})
     sql = "select distinct STMC, STZWM from V_SJZC_GXST where STGMLMC='%s'" % category
     data = rawsql.get_json(sql)

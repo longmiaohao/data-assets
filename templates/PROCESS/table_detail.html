@@ -130,7 +130,7 @@
                         count++
                     }
                 })
-
+                $("#table_" + table_name + " tbody").append(tr + "</tr>")
             },
             error: function (){
                 console.log("网络错误")
